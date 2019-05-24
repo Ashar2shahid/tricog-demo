@@ -6,7 +6,11 @@ const app = express();
 //Establish Database Connection
 connectDB();
 
-app.get("/", (req, res) => res.send("API running"));
+//Intialize Express Body Parser Middleware
+app.use(express.json({ extended: false }));
+
+// Define Routes
+app.use("/api/users", require("./routes/api/users"));
 
 // SET PORT on Digital Oceon
 const PORT = process.env.PORT || 5000;
