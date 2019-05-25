@@ -1,9 +1,11 @@
-const mysql = require("mysql");
+const mysql = require("mysql2/promise");
 const db_config = require("./db-config.json");
 
-const connectDB = async () => {
+let connectDB = {};
+
+connectDB.start_connection = async () => {
   try {
-    await mysql.createConnection(db_config);
+    connectDB.connection_mysql = await mysql.createPool(db_config);
     console.log("MySQL Connected...");
   } catch (err) {
     console.error(err.message);
