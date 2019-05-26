@@ -58,23 +58,26 @@ router.post("/", async (req, res) => {
     let signature = JSON.stringify({
       id: result_insertion_table[0].insertId,
       created_at: Math.round(new Date() / 1000),
-      expire_time: 300,
+      expire_time: 3600, //1 hour expire time
       serverHash: crypto
         .createHash("md5")
         .update(secret_config.ServerSecret)
         .digest("hex")
     });
 
+    // Create a cipher to encrpt signature
     const cipher = crypto.createCipheriv("aes-256-cbc", secret_config.secretKey, secret_config.iv);
     let token = cipher.update(signature, "utf8", "base64");
     token += cipher.final("base64");
 
+    // Send token as response for registeration
     return res.json({ token: token });
   } catch (err) {
     console.log(err);
     let print_error = "Server Error";
     if (err.code === "ER_DUP_ENTRY") print_error = "Pan Number has already been added";
 
+    // Send error in case something goes wrong
     res.status(500).send(print_error);
   }
 });
@@ -85,9 +88,15 @@ router.post("/", async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    const [result, fields] = await connectDB.connection_mysql.query("SELECT * FROM customers");
+    const [result, fields] = await connectDB.connection_mysql.query(
+      `SELECT first_name,last_name,father_name,pan_number,date_of_birth,gender,email,address,profile_image FROM customers where id='${
+        req.user
+      }' limit 1`
+    );
 
-    res.json(result);
+    const user_detail = result[0];
+
+    res.json(user_detail);
   } catch (err) {
     console.log(err);
     res.status(500).send(err);

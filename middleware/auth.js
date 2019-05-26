@@ -31,8 +31,6 @@ module.exports = function(req, res, next) {
 
     const token_expire_date = decrypted_object.created_at + decrypted_object.expire_time;
 
-    console.log(token_expire_date, Math.round(new Date() / 1000));
-
     if (token_expire_date < Math.round(new Date() / 1000)) throw "Invalid Token time";
 
     req.user = decrypted_object.id;
