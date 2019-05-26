@@ -92,7 +92,7 @@ module.exports = function validateUserData(data) {
   }
 
   if (
-    /^(https?:\/\/)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(\/[-\\w@\\+\\.~#\\?&/=%]*)?$/.test(
+    !/^(https?:\/\/)?(www\\.)?([-a-z0-9]{1,63}\\.)*?[a-z0-9][-a-z0-9]{0,61}[a-z0-9]\\.[a-z]{2,6}(\/[-\\w@\\+\\.~#\\?&/=%]*)?$/.test(
       data.profile_image
     )
   ) {
